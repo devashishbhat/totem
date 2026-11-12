@@ -1,0 +1,21 @@
+name: totem
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: totem
+      POSTGRES_PASSWORD: totem
+      POSTGRES_DB: totem
+    ports:
+      - "5432:5432"
+    volumes:
+      - totem-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U totem -d totem"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+volumes:
+  totem-pgdata:

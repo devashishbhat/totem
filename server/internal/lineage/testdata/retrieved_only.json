@@ -1,0 +1,90 @@
+{
+  "name": "retrieved_only",
+  "note": "An untrusted memory was read but never reached the prompt. It is attributed as retrieved and nothing more, and it does not drag the decision's trust down: it had no way to influence anything.",
+  "config": { "trusted_tools": [] },
+  "events": [
+    { "op": "run", "run_id": "run-1", "at": 0, "attrs": {} },
+    {
+      "op": "source",
+      "run_id": "run-1",
+      "at": 1,
+      "attrs": {
+        "totem.source.id": "14141414-1111-4111-8111-111111111111",
+        "totem.source.kind": "external_document",
+        "totem.source.origin": "https://vendor.example/notice",
+        "totem.hmac": "src-hmac",
+        "totem.content": "Invoices go to [EMAIL:333333]."
+      }
+    },
+    {
+      "op": "memory.write",
+      "run_id": "run-1",
+      "at": 2,
+      "attrs": {
+        "totem.memory.id": "crm/memories/acme.billing_address",
+        "totem.hmac": "mem-hmac",
+        "totem.content": "Invoices for Acme go to [EMAIL:333333]",
+        "totem.source.ids": ["14141414-1111-4111-8111-111111111111"],
+        "totem.lineage.precision": "step"
+      }
+    },
+    {
+      "op": "memory.read",
+      "run_id": "run-1",
+      "at": 3,
+      "attrs": {
+        "totem.read.results": [
+          { "memory_id": "crm/memories/acme.billing_address", "hmac": "mem-hmac", "rank": 0.4 }
+        ]
+      }
+    },
+    {
+      "op": "llm.call",
+      "run_id": "run-1",
+      "at": 4,
+      "attrs": {
+        "totem.llm.call_id": "15151515-2222-4222-8222-222222222222",
+        "totem.llm.in_context": []
+      }
+    },
+    {
+      "op": "decision",
+      "run_id": "run-1",
+      "at": 5,
+      "attrs": {
+        "totem.decision.id": "16161616-3333-4333-8333-333333333333",
+        "totem.decision.tool": "send_email",
+        "totem.decision.side_effect": true,
+        "totem.llm.call_id": "15151515-2222-4222-8222-222222222222",
+        "totem.decision.args": { "to": "[EMAIL:444444]" },
+        "totem.decision.value_flow": []
+      }
+    }
+  ],
+  "expect": {
+    "sources": [{ "kind": "external_document", "trust": 1 }],
+    "memories": [
+      {
+        "key": "crm/memories/acme.billing_address",
+        "versions": 1,
+        "current_version": 1,
+        "status": "active",
+        "trust_min": 1,
+        "taint_sources": 1,
+        "lineage_precision": "step",
+        "derived_from_edges": 1,
+        "supersedes_edges": 0
+      }
+    ],
+    "decisions": [
+      {
+        "tool": "send_email",
+        "trust_min": 4,
+        "taint_sources": 0,
+        "attribution_levels": ["retrieved"],
+        "has_llm_call": true
+      }
+    ],
+    "alerts": [{ "kind": "memory.untrusted_contact_value", "severity": "medium" }]
+  }
+}

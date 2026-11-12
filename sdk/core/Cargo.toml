@@ -1,0 +1,47 @@
+[package]
+name = "totem-core"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.82"
+description = "Text primitives for Totem: normalization, fingerprinting, redaction and influence matching"
+license = "Apache-2.0"
+publish = false
+
+[lib]
+name = "totem_core"
+# cdylib builds the Python extension; rlib keeps the crate usable from Rust
+# tests and benches.
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+hex = "0.4"
+hmac = "0.12"
+once_cell = "1"
+regex = "1"
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1", features = ["preserve_order"] }
+sha2 = "0.10"
+unicode-normalization = "0.1"
+
+[dependencies.pyo3]
+version = "0.30"
+features = ["extension-module", "abi3-py312"]
+optional = true
+
+[features]
+# The Python extension is opt-in so that `cargo test` and `cargo clippy`
+# work without linking libpython. Maturin builds with --features python.
+default = []
+python = ["pyo3"]
+
+[dev-dependencies]
+criterion = { version = "0.5", default-features = false }
+proptest = "1"
+
+[[bench]]
+name = "matching"
+harness = false
+
+[profile.release]
+lto = true
+codegen-units = 1
