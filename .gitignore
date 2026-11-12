@@ -1,0 +1,42 @@
+# secrets
+.env
+.env.local
+
+# python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+dist/
+*.egg-info/
+
+# rust
+target/
+
+# the compiled extension, which maturin drops into the package directory
+*.abi3.so
+*.so
+*.pyd
+
+# go
+server/totem-server
+server/bin/
+
+# node
+node_modules/
+dashboard/dist/
+dashboard/.vite/
+dashboard/test-results/
+dashboard/playwright-report/
+
+# local
+.DS_Store
+*.log
+
+# what 'make start' leaves behind: logs and the pids 'make stop' reads
+.logs/
+
+# the assistant's saved memory, written by demo/chat.py
+demo/.memory.json

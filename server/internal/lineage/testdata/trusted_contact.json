@@ -1,0 +1,97 @@
+{
+  "name": "trusted_contact",
+  "note": "The same shape as the poisoning, but the address came from the CRM, which is a trusted tool. Nothing should be alerted on: this is the case a noisy product gets wrong.",
+  "config": { "trusted_tools": ["lookup_contact"] },
+  "events": [
+    { "op": "run", "run_id": "run-1", "at": 0, "attrs": { "totem.run.scope": "user:42" } },
+    {
+      "op": "source",
+      "run_id": "run-1",
+      "at": 1,
+      "attrs": {
+        "totem.source.id": "aaaaaaaa-1111-4111-8111-111111111111",
+        "totem.source.kind": "tool_output",
+        "totem.source.origin": "lookup_contact",
+        "totem.hmac": "src-crm-hmac",
+        "totem.content": "Acme Supplies accounts payable: [EMAIL:111111]"
+      }
+    },
+    {
+      "op": "memory.write",
+      "run_id": "run-1",
+      "at": 2,
+      "attrs": {
+        "totem.memory.id": "crm/memories/acme.billing_address",
+        "totem.hmac": "mem-real-hmac",
+        "totem.content": "Invoices for Acme go to [EMAIL:111111]",
+        "totem.source.ids": ["aaaaaaaa-1111-4111-8111-111111111111"],
+        "totem.lineage.precision": "step"
+      }
+    },
+    {
+      "op": "llm.call",
+      "run_id": "run-1",
+      "at": 3,
+      "attrs": {
+        "totem.llm.call_id": "bbbbbbbb-2222-4222-8222-222222222222",
+        "gen_ai.request.model": "gpt-4o-mini",
+        "totem.llm.in_context": [
+          {
+            "ref_type": "memory",
+            "ref_id": "crm/memories/acme.billing_address",
+            "hmac": "mem-real-hmac",
+            "match": "exact",
+            "spans": [[0, 0, 38]]
+          }
+        ]
+      }
+    },
+    {
+      "op": "decision",
+      "run_id": "run-1",
+      "at": 4,
+      "attrs": {
+        "totem.decision.id": "cccccccc-3333-4333-8333-333333333333",
+        "totem.decision.tool": "send_email",
+        "totem.decision.side_effect": true,
+        "totem.llm.call_id": "bbbbbbbb-2222-4222-8222-222222222222",
+        "totem.decision.args": { "to": "[EMAIL:111111]" },
+        "totem.decision.value_flow": [
+          {
+            "ref_type": "memory",
+            "ref_id": "crm/memories/acme.billing_address",
+            "hmac": "mem-real-hmac",
+            "arg_path": "to",
+            "match": "exact"
+          }
+        ]
+      }
+    }
+  ],
+  "expect": {
+    "sources": [{ "kind": "tool_output", "trust": 2 }],
+    "memories": [
+      {
+        "key": "crm/memories/acme.billing_address",
+        "versions": 1,
+        "current_version": 1,
+        "status": "active",
+        "trust_min": 2,
+        "taint_sources": 0,
+        "lineage_precision": "step",
+        "derived_from_edges": 1,
+        "supersedes_edges": 0
+      }
+    ],
+    "decisions": [
+      {
+        "tool": "send_email",
+        "trust_min": 2,
+        "taint_sources": 0,
+        "attribution_levels": ["in_context", "value_flow"],
+        "has_llm_call": true
+      }
+    ],
+    "alerts": []
+  }
+}

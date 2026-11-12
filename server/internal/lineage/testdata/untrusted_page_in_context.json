@@ -1,0 +1,189 @@
+{
+  "name": "untrusted_page_in_context",
+  "note": "A real conversation, not a staged one. The person gave the agent an address themselves, and the agent later emailed it. Earlier in the same conversation it read a web page, and because a chat agent re-sends its history every turn, that page is still in the prompt. The decision is therefore untrusted (high), but no memory is: the value came from the person. Two things have to hold. The alert must not call this a poisoned memory, or it sends the reader hunting for one that does not exist. And of the two untrusted sources in the prompt it must name the page, not the agent's own 'Remembered x' echo from an unvouched-for tool.",
+  "config": {
+    "trusted_tools": []
+  },
+  "events": [
+    {
+      "op": "run",
+      "run_id": "run-1",
+      "at": 0,
+      "attrs": {
+        "totem.run.scope": "user:ana"
+      }
+    },
+    {
+      "op": "source",
+      "run_id": "run-1",
+      "at": 1,
+      "attrs": {
+        "totem.source.id": "aaaaaaaa-1111-4111-8111-111111111111",
+        "totem.source.kind": "user_message",
+        "totem.source.origin": "user",
+        "totem.hmac": "src-user-hmac",
+        "totem.content": "Remember that my sister's email is [EMAIL:111111]"
+      }
+    },
+    {
+      "op": "memory.write",
+      "run_id": "run-1",
+      "at": 2,
+      "attrs": {
+        "totem.memory.id": "assistant/memories/sister.email",
+        "totem.hmac": "mem-sister-hmac",
+        "totem.content": "My sister's email is [EMAIL:111111]",
+        "totem.source.ids": [
+          "aaaaaaaa-1111-4111-8111-111111111111"
+        ],
+        "totem.lineage.precision": "step"
+      }
+    },
+    {
+      "op": "source",
+      "run_id": "run-1",
+      "at": 3,
+      "attrs": {
+        "totem.source.id": "cccccccc-5555-4555-8555-555555555555",
+        "totem.source.kind": "tool_output",
+        "totem.source.origin": "remember",
+        "totem.hmac": "src-echo-hmac",
+        "totem.content": "Remembered sister.email."
+      }
+    },
+    {
+      "op": "source",
+      "run_id": "run-1",
+      "at": 4,
+      "attrs": {
+        "totem.source.id": "bbbbbbbb-2222-4222-8222-222222222222",
+        "totem.source.kind": "external_document",
+        "totem.source.origin": "https://example.com",
+        "totem.hmac": "src-page-hmac",
+        "totem.content": "This domain is for use in documentation examples without needing permission."
+      }
+    },
+    {
+      "op": "llm.call",
+      "run_id": "run-1",
+      "at": 5,
+      "attrs": {
+        "totem.llm.call_id": "cccccccc-3333-4333-8333-333333333333",
+        "gen_ai.request.model": "gpt-4o-mini",
+        "totem.llm.in_context": [
+          {
+            "ref_type": "source",
+            "ref_id": "cccccccc-5555-4555-8555-555555555555",
+            "hmac": "src-echo-hmac",
+            "match": "exact",
+            "spans": [
+              [
+                2,
+                0,
+                24
+              ]
+            ]
+          },
+          {
+            "ref_type": "memory",
+            "ref_id": "assistant/memories/sister.email",
+            "hmac": "mem-sister-hmac",
+            "match": "exact",
+            "spans": [
+              [
+                0,
+                0,
+                35
+              ]
+            ]
+          },
+          {
+            "ref_type": "source",
+            "ref_id": "bbbbbbbb-2222-4222-8222-222222222222",
+            "hmac": "src-page-hmac",
+            "match": "exact",
+            "spans": [
+              [
+                1,
+                0,
+                76
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "op": "decision",
+      "run_id": "run-1",
+      "at": 6,
+      "attrs": {
+        "totem.decision.id": "dddddddd-4444-4444-8444-444444444444",
+        "totem.decision.tool": "send_email",
+        "totem.decision.side_effect": true,
+        "totem.llm.call_id": "cccccccc-3333-4333-8333-333333333333",
+        "totem.decision.args": {
+          "to": "[EMAIL:111111]",
+          "subject": "Happy birthday"
+        },
+        "totem.decision.value_flow": [
+          {
+            "ref_type": "memory",
+            "ref_id": "assistant/memories/sister.email",
+            "hmac": "mem-sister-hmac",
+            "arg_path": "to",
+            "match": "exact"
+          }
+        ]
+      }
+    }
+  ],
+  "expect": {
+    "sources": [
+      {
+        "kind": "user_message",
+        "trust": 3
+      },
+      {
+        "kind": "tool_output",
+        "trust": 1
+      },
+      {
+        "kind": "external_document",
+        "trust": 1
+      }
+    ],
+    "memories": [
+      {
+        "key": "assistant/memories/sister.email",
+        "versions": 1,
+        "current_version": 1,
+        "status": "active",
+        "trust_min": 3,
+        "taint_sources": 0,
+        "lineage_precision": "step",
+        "derived_from_edges": 1,
+        "supersedes_edges": 0
+      }
+    ],
+    "decisions": [
+      {
+        "tool": "send_email",
+        "trust_min": 1,
+        "taint_sources": 2,
+        "attribution_levels": [
+          "in_context",
+          "value_flow"
+        ],
+        "has_llm_call": true
+      }
+    ],
+    "alerts": [
+      {
+        "kind": "taint.side_effect_from_untrusted",
+        "severity": "high",
+        "title": "send_email ran with untrusted text from https://example.com in its prompt"
+      }
+    ]
+  }
+}

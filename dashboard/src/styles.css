@@ -1,0 +1,107 @@
+@import "tailwindcss";
+
+@theme {
+  /* A near-neutral graphite, layered rather than black: the sidebar sits
+     below the page, a card sits above it. Only a trace of blue-grey, so the
+     only real colour on screen is the colour that means something. */
+  --color-bg: oklch(0.21 0.002 250);
+  --color-panel: oklch(0.235 0.002 250);
+  --color-card: oklch(0.25 0.002 250);
+  --color-card-hover: oklch(0.295 0.002 250);
+  --color-sidebar: oklch(0.18 0.002 250);
+
+  /* Hairlines separate, they do not decorate, so they sit low enough to
+     recede behind the content they divide. */
+  --color-line: oklch(1 0 0 / 9%);
+  --color-line-soft: oklch(1 0 0 / 5%);
+
+  --color-ink: oklch(0.97 0.002 250);
+  --color-ink-muted: oklch(0.72 0.002 250);
+  --color-ink-faint: oklch(0.58 0.002 250);
+
+  /* A link is a muted blue, not a saturated one: it marks a word as
+     clickable without competing with the trust scale, which is the only
+     colour on screen allowed to mean something. */
+  --color-accent: oklch(0.73 0.072 245);
+  --color-accent-bright: oklch(0.82 0.06 245);
+
+  /* The primary control is light on dark, the way a key on a dark keyboard
+     is. A saturated blue button reads as a marketing call to action. */
+  --color-primary: oklch(0.9 0.002 250);
+  --color-primary-ink: oklch(0.21 0.002 250);
+
+  /* The trust scale, from unknown to the agent's own configuration. These
+     five are load-bearing: a colour here is a claim about provenance. */
+  --color-trust-0: oklch(0.65 0.2 25);
+  --color-trust-1: oklch(0.74 0.16 60);
+  --color-trust-2: oklch(0.82 0.14 95);
+  --color-trust-3: oklch(0.75 0.15 160);
+  --color-trust-4: oklch(0.7 0.13 245);
+
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  /* The scale is Tailwind's own, not a shrunken copy of it. The previous
+     values took a point off each step, which made every screen read as fine
+     print: 11px body text in a product someone is meant to study. 12px is the
+     floor, for metadata and chips; 14px is body; 15px is a heading. */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 0.9375rem;
+  --text-lg: 1.0625rem;
+
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.625rem;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Observed text is never trusted markup. This only stops a long value from
+   breaking the layout. */
+.observed {
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-line);
+  border: 3px solid transparent;
+  background-clip: content-box;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-ink-faint);
+  background-clip: content-box;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.react-flow__attribution {
+  display: none;
+}
+
+/* The incident graph is a picture, not a diagram editor: its nodes have no
+   connection points to offer. Hidden with opacity rather than display, so
+   edges still anchor to them. */
+.incident-graph .react-flow__handle {
+  opacity: 0;
+}

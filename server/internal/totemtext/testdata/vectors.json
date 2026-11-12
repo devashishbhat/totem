@@ -1,0 +1,195 @@
+{
+  "salt": "cross-language-salt",
+  "text": [
+    {
+      "input": "",
+      "normalized": "",
+      "hmac": "b4251a563cc6d5414c53cafed82223c567a7a90adfd5c5ae4e2d93741be9f1bc",
+      "fingerprint": "b4251a563cc6d5414c53cafed82223c567a7a90adfd5c5ae4e2d93741be9f1bc",
+      "redacted": "",
+      "findings": [],
+      "has_contact_placeholder": false
+    },
+    {
+      "input": "   ",
+      "normalized": "",
+      "hmac": "b4251a563cc6d5414c53cafed82223c567a7a90adfd5c5ae4e2d93741be9f1bc",
+      "fingerprint": "b4251a563cc6d5414c53cafed82223c567a7a90adfd5c5ae4e2d93741be9f1bc",
+      "redacted": "   ",
+      "findings": [],
+      "has_contact_placeholder": false
+    },
+    {
+      "input": "a b",
+      "normalized": "a b",
+      "hmac": "a12966aadae9cc9ae074029139a3f39cf95ca6ebb71388b7c87df280dba9fc72",
+      "fingerprint": "a12966aadae9cc9ae074029139a3f39cf95ca6ebb71388b7c87df280dba9fc72",
+      "redacted": "a b",
+      "findings": [],
+      "has_contact_placeholder": false
+    },
+    {
+      "input": "  a \n\t b  ",
+      "normalized": "a b",
+      "hmac": "a12966aadae9cc9ae074029139a3f39cf95ca6ebb71388b7c87df280dba9fc72",
+      "fingerprint": "a12966aadae9cc9ae074029139a3f39cf95ca6ebb71388b7c87df280dba9fc72",
+      "redacted": "  a \n\t b  ",
+      "findings": [],
+      "has_contact_placeholder": false
+    },
+    {
+      "input": "Acme Supplies",
+      "normalized": "Acme Supplies",
+      "hmac": "937b94f05f72c73ee7852794b867c5d38207d108e9fbb05af42880aa93ddb3b4",
+      "fingerprint": "937b94f05f72c73ee7852794b867c5d38207d108e9fbb05af42880aa93ddb3b4",
+      "redacted": "Acme Supplies",
+      "findings": [],
+      "has_contact_placeholder": false
+    },
+    {
+      "input": "ﬁx",
+      "normalized": "fix",
+      "hmac": "2d822168e4ca486e9743f2b21d3f528c464e38d975ebf28d678b3b6c8655f426",
+      "fingerprint": "2d822168e4ca486e9743f2b21d3f528c464e38d975ebf28d678b3b6c8655f426",
+      "redacted": "ﬁx",
+      "findings": [],
+      "has_contact_placeholder": false
+    },
+    {
+      "input": "a b",
+      "normalized": "a b",
+      "hmac": "a12966aadae9cc9ae074029139a3f39cf95ca6ebb71388b7c87df280dba9fc72",
+      "fingerprint": "a12966aadae9cc9ae074029139a3f39cf95ca6ebb71388b7c87df280dba9fc72",
+      "redacted": "a b",
+      "findings": [],
+      "has_contact_placeholder": false
+    },
+    {
+      "input": "Invoices for Acme go to billing@acme-payments.example",
+      "normalized": "Invoices for Acme go to billing@acme-payments.example",
+      "hmac": "577f8b74f8152552fc7a57fa466fcb3086b70848d1ac9ca0e9ab1447009c5819",
+      "fingerprint": "6df12c04639c8bd0983c58ff3de8586a87e9477184edd5674ff9deec8b49d879",
+      "redacted": "Invoices for Acme go to [EMAIL:29d958]",
+      "findings": [
+        "EMAIL"
+      ],
+      "has_contact_placeholder": true
+    },
+    {
+      "input": "Please remember that invoices for Acme go to billing@acme-payments.example from now on.",
+      "normalized": "Please remember that invoices for Acme go to billing@acme-payments.example from now on.",
+      "hmac": "be0f0375dd0d578e92b2b4ac7ad4b190add99102b6c107c068c2ff5b2399d2c1",
+      "fingerprint": "649aa621486993c1c3346f03874f2ca61b0162615fb2a3ca07cd9a002e2e1c7d",
+      "redacted": "Please remember that invoices for Acme go to [EMAIL:29d958] from now on.",
+      "findings": [
+        "EMAIL"
+      ],
+      "has_contact_placeholder": true
+    },
+    {
+      "input": "ap@acme.example and billing@acme-payments.example",
+      "normalized": "ap@acme.example and billing@acme-payments.example",
+      "hmac": "960c6d68b8ecd08ee905d2dd8fc3eaa136b9804ee0900ec680c73cb46ef1c2d8",
+      "fingerprint": "c1942a24872b1b1fd7b2969219148e76714a14e3dcc81a5a0ad297cc045bc864",
+      "redacted": "[EMAIL:d26bc6] and [EMAIL:29d958]",
+      "findings": [
+        "EMAIL",
+        "EMAIL"
+      ],
+      "has_contact_placeholder": true
+    },
+    {
+      "input": "card 4111 1111 1111 1111",
+      "normalized": "card 4111 1111 1111 1111",
+      "hmac": "6044df0498ea6252f0f88eea2688304c94f8d54e3bba95c3f6fcca20418c8879",
+      "fingerprint": "36fcefb6dae41169216e0bbe6f9feb6dca056f5af3bd4fb727bb3651e6eccb2e",
+      "redacted": "card [CARD:de6319]",
+      "findings": [
+        "CARD"
+      ],
+      "has_contact_placeholder": false
+    },
+    {
+      "input": "order 1234567890123456789",
+      "normalized": "order 1234567890123456789",
+      "hmac": "b28dcd13eb9667e35d92ae17ba7aeacef1b390ce40077284e60fef4794137122",
+      "fingerprint": "b28dcd13eb9667e35d92ae17ba7aeacef1b390ce40077284e60fef4794137122",
+      "redacted": "order 1234567890123456789",
+      "findings": [],
+      "has_contact_placeholder": false
+    },
+    {
+      "input": "key sk-abcdefghijklmnopqrstuvwxyz0123",
+      "normalized": "key sk-abcdefghijklmnopqrstuvwxyz0123",
+      "hmac": "2d9fa85f0b71c663d53917040255730578ba86bec10c263062c46e196b73b030",
+      "fingerprint": "07b48d7b355e2e23d807a3469cd7e304b0f7792001bc7a927541b3be6701d733",
+      "redacted": "key [KEY:8d25f6]",
+      "findings": [
+        "KEY"
+      ],
+      "has_contact_placeholder": false
+    },
+    {
+      "input": "call 415-555-0198 today",
+      "normalized": "call 415-555-0198 today",
+      "hmac": "f7e594990ce9611d522c417c0f70a900493e91914bc7046dc1026fad6008ab35",
+      "fingerprint": "30a4b135d715e44a89d206baef428c80fa9dc95a729cd2dadb3b920addc41968",
+      "redacted": "call [PHONE:1d449f] today",
+      "findings": [
+        "PHONE"
+      ],
+      "has_contact_placeholder": true
+    },
+    {
+      "input": "token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dBjftJeZ4CVPmB92K27uhbUJU1p1r_wW1gFWFOEjXk",
+      "normalized": "token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dBjftJeZ4CVPmB92K27uhbUJU1p1r_wW1gFWFOEjXk",
+      "hmac": "ef3c906332e967de6897859a3e6455949dea74e0340d578f159adf715838732e",
+      "fingerprint": "42dc9540ea390f188e3549d9247d097e38655882b850ffd3ec94db9fac11adf8",
+      "redacted": "token [JWT:28a19f]",
+      "findings": [
+        "JWT"
+      ],
+      "has_contact_placeholder": false
+    },
+    {
+      "input": "Invoices go to [EMAIL:3f9a1c]",
+      "normalized": "Invoices go to [EMAIL:3f9a1c]",
+      "hmac": "3a626d48b4137e269e390b42781efb839de3bc06bc1b19e725961d6237ea99f0",
+      "fingerprint": "3a626d48b4137e269e390b42781efb839de3bc06bc1b19e725961d6237ea99f0",
+      "redacted": "Invoices go to [EMAIL:3f9a1c]",
+      "findings": [],
+      "has_contact_placeholder": true
+    },
+    {
+      "input": "Acme pays on net 30.",
+      "normalized": "Acme pays on net 30.",
+      "hmac": "f8fa5f666fb047a461d701a823a548b5457dbf9395ab4865f40f5c95fab20b82",
+      "fingerprint": "f8fa5f666fb047a461d701a823a548b5457dbf9395ab4865f40f5c95fab20b82",
+      "redacted": "Acme pays on net 30.",
+      "findings": [],
+      "has_contact_placeholder": false
+    }
+  ],
+  "json": [
+    {
+      "input": "{ \"b\": 1, \"a\": [2, 3] }",
+      "canonical": "{\"a\":[2,3],\"b\":1}"
+    },
+    {
+      "input": "[1.0, 2.5]",
+      "canonical": "[1,2.5]"
+    },
+    {
+      "input": "{\"b\":null,\"a\":true}",
+      "canonical": "{\"a\":true,\"b\":null}"
+    },
+    {
+      "input": "{\"\\u00e9\":1,\"a\":2}",
+      "canonical": "{\"a\":2,\"é\":1}"
+    },
+    {
+      "input": "{\"to\":\"billing@acme-payments.example\",\"body\":\"hi\"}",
+      "canonical": "{\"body\":\"hi\",\"to\":\"billing@acme-payments.example\"}"
+    }
+  ]
+}

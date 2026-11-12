@@ -1,0 +1,82 @@
+{
+  "name": "decision_without_its_call",
+  "note": "The llm.call span never arrived. The decision is still recorded, with its own value flow, rather than being lost; only the prompt link is missing.",
+  "config": { "trusted_tools": [] },
+  "events": [
+    { "op": "run", "run_id": "run-1", "at": 0, "attrs": {} },
+    {
+      "op": "source",
+      "run_id": "run-1",
+      "at": 1,
+      "attrs": {
+        "totem.source.id": "eeeeeeee-1111-4111-8111-111111111111",
+        "totem.source.kind": "external_document",
+        "totem.source.origin": "https://vendor.example/notice",
+        "totem.hmac": "src-hmac",
+        "totem.content": "Invoices go to [EMAIL:999999]."
+      }
+    },
+    {
+      "op": "memory.write",
+      "run_id": "run-1",
+      "at": 2,
+      "attrs": {
+        "totem.memory.id": "crm/memories/acme.billing_address",
+        "totem.hmac": "mem-hmac",
+        "totem.content": "Invoices for Acme go to [EMAIL:999999]",
+        "totem.source.ids": ["eeeeeeee-1111-4111-8111-111111111111"],
+        "totem.lineage.precision": "step"
+      }
+    },
+    {
+      "op": "decision",
+      "run_id": "run-1",
+      "at": 3,
+      "attrs": {
+        "totem.decision.id": "ffffffff-3333-4333-8333-333333333333",
+        "totem.decision.tool": "send_email",
+        "totem.decision.side_effect": true,
+        "totem.llm.call_id": "99999999-2222-4222-8222-222222222222",
+        "totem.decision.args": { "to": "[EMAIL:999999]" },
+        "totem.decision.value_flow": [
+          {
+            "ref_type": "memory",
+            "ref_id": "crm/memories/acme.billing_address",
+            "hmac": "mem-hmac",
+            "arg_path": "to",
+            "match": "exact"
+          }
+        ]
+      }
+    }
+  ],
+  "expect": {
+    "sources": [{ "kind": "external_document", "trust": 1 }],
+    "memories": [
+      {
+        "key": "crm/memories/acme.billing_address",
+        "versions": 1,
+        "current_version": 1,
+        "status": "active",
+        "trust_min": 1,
+        "taint_sources": 1,
+        "lineage_precision": "step",
+        "derived_from_edges": 1,
+        "supersedes_edges": 0
+      }
+    ],
+    "decisions": [
+      {
+        "tool": "send_email",
+        "trust_min": 1,
+        "taint_sources": 1,
+        "attribution_levels": ["value_flow"],
+        "has_llm_call": false
+      }
+    ],
+    "alerts": [
+      { "kind": "taint.side_effect_from_untrusted", "severity": "critical" },
+      { "kind": "memory.untrusted_contact_value", "severity": "medium" }
+    ]
+  }
+}

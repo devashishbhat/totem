@@ -1,0 +1,87 @@
+{
+  "name": "memory_versions",
+  "note": "A memory is corrected and then deleted. Each change is a version, the old one is superseded rather than overwritten, and an unchanged write is not a version at all.",
+  "config": { "trusted_tools": [] },
+  "events": [
+    { "op": "run", "run_id": "run-1", "at": 0, "attrs": {} },
+    {
+      "op": "source",
+      "run_id": "run-1",
+      "at": 1,
+      "attrs": {
+        "totem.source.id": "dddddddd-1111-4111-8111-111111111111",
+        "totem.source.kind": "user_message",
+        "totem.hmac": "src-user-hmac",
+        "totem.content": "Acme pays on net 30."
+      }
+    },
+    {
+      "op": "memory.write",
+      "run_id": "run-1",
+      "at": 2,
+      "attrs": {
+        "totem.memory.id": "crm/memories/acme.terms",
+        "totem.hmac": "terms-v1",
+        "totem.content": "Acme pays on net 30.",
+        "totem.source.ids": ["dddddddd-1111-4111-8111-111111111111"],
+        "totem.lineage.precision": "run"
+      }
+    },
+    {
+      "op": "memory.write",
+      "run_id": "run-1",
+      "at": 3,
+      "attrs": {
+        "totem.memory.id": "crm/memories/acme.terms",
+        "totem.hmac": "terms-v1",
+        "totem.content": "Acme pays on net 30.",
+        "totem.source.ids": ["dddddddd-1111-4111-8111-111111111111"],
+        "totem.lineage.precision": "run"
+      }
+    },
+    {
+      "op": "memory.write",
+      "run_id": "run-1",
+      "at": 4,
+      "attrs": {
+        "totem.memory.id": "crm/memories/acme.terms",
+        "totem.hmac": "terms-v2",
+        "totem.content": "Acme pays on net 45 from November.",
+        "totem.source.ids": ["dddddddd-1111-4111-8111-111111111111"],
+        "totem.memory.derived_from": ["crm/memories/acme.terms"],
+        "totem.lineage.precision": "run"
+      }
+    },
+    {
+      "op": "memory.write",
+      "run_id": "run-1",
+      "at": 5,
+      "attrs": {
+        "totem.memory.id": "crm/memories/acme.terms",
+        "totem.hmac": "terms-v2",
+        "totem.content": "",
+        "totem.memory.deleted": true,
+        "totem.source.ids": ["dddddddd-1111-4111-8111-111111111111"],
+        "totem.lineage.precision": "run"
+      }
+    }
+  ],
+  "expect": {
+    "sources": [{ "kind": "user_message", "trust": 3 }],
+    "memories": [
+      {
+        "key": "crm/memories/acme.terms",
+        "versions": 3,
+        "current_version": 3,
+        "status": "deleted",
+        "trust_min": 3,
+        "taint_sources": 0,
+        "lineage_precision": "run",
+        "derived_from_edges": 1,
+        "supersedes_edges": 1
+      }
+    ],
+    "decisions": [],
+    "alerts": []
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "name": "unknown_provenance",
+  "note": "A memory written with no recorded lineage is T0, not trusted by default, and a side-effecting decision that uses it is high rather than critical: nothing proves the value itself came from untrusted text.",
+  "config": { "trusted_tools": [] },
+  "events": [
+    { "op": "run", "run_id": "run-1", "at": 0, "attrs": {} },
+    {
+      "op": "memory.write",
+      "run_id": "run-1",
+      "at": 1,
+      "attrs": {
+        "totem.memory.id": "crm/memories/acme.note",
+        "totem.hmac": "orphan-hmac",
+        "totem.content": "Acme prefers morning deliveries.",
+        "totem.source.ids": [],
+        "totem.lineage.precision": "run"
+      }
+    },
+    {
+      "op": "llm.call",
+      "run_id": "run-1",
+      "at": 2,
+      "attrs": {
+        "totem.llm.call_id": "12121212-2222-4222-8222-222222222222",
+        "totem.llm.in_context": [
+          {
+            "ref_type": "memory",
+            "ref_id": "crm/memories/acme.note",
+            "hmac": "orphan-hmac",
+            "match": "partial",
+            "spans": [[0, 0, 32]]
+          }
+        ]
+      }
+    },
+    {
+      "op": "decision",
+      "run_id": "run-1",
+      "at": 3,
+      "attrs": {
+        "totem.decision.id": "13131313-3333-4333-8333-333333333333",
+        "totem.decision.tool": "send_email",
+        "totem.decision.side_effect": true,
+        "totem.llm.call_id": "12121212-2222-4222-8222-222222222222",
+        "totem.decision.args": { "to": "[EMAIL:222222]" },
+        "totem.decision.value_flow": []
+      }
+    }
+  ],
+  "expect": {
+    "sources": [],
+    "memories": [
+      {
+        "key": "crm/memories/acme.note",
+        "versions": 1,
+        "current_version": 1,
+        "status": "active",
+        "trust_min": 0,
+        "taint_sources": 0,
+        "lineage_precision": "run",
+        "derived_from_edges": 0,
+        "supersedes_edges": 0
+      }
+    ],
+    "decisions": [
+      {
+        "tool": "send_email",
+        "trust_min": 0,
+        "taint_sources": 0,
+        "attribution_levels": ["in_context"],
+        "has_llm_call": true
+      }
+    ],
+    "alerts": [{ "kind": "taint.side_effect_from_untrusted", "severity": "high" }]
+  }
+}
